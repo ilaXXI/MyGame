@@ -1,4 +1,133 @@
-const puzzles = [
+const FLAGS = [
+  ["🇦🇫", "Afghanistan"], ["🇿🇦", "Afrique du Sud"], ["🇦🇱", "Albanie"], ["🇩🇿", "Algérie"],
+  ["🇩🇪", "Allemagne"], ["🇦🇩", "Andorre"], ["🇦🇴", "Angola"], ["🇦🇬", "Antigua-et-Barbuda"],
+  ["🇸🇦", "Arabie saoudite"], ["🇦🇷", "Argentine"], ["🇦🇲", "Arménie"], ["🇦🇺", "Australie"],
+  ["🇦🇹", "Autriche"], ["🇦🇿", "Azerbaïdjan"], ["🇧🇸", "Bahamas"], ["🇧🇭", "Bahreïn"],
+  ["🇧🇩", "Bangladesh"], ["🇧🇧", "Barbade"], ["🇧🇪", "Belgique"], ["🇧🇿", "Belize"],
+  ["🇧🇯", "Bénin"], ["🇧🇹", "Bhoutan"], ["🇧🇾", "Biélorussie"], ["🇲🇲", "Birmanie"],
+  ["🇧🇴", "Bolivie"], ["🇧🇦", "Bosnie-Herzégovine"], ["🇧🇼", "Botswana"], ["🇧🇷", "Brésil"],
+  ["🇧🇳", "Brunei"], ["🇧🇬", "Bulgarie"], ["🇧🇫", "Burkina Faso"], ["🇧🇮", "Burundi"],
+  ["🇨🇻", "Cap-Vert"], ["🇰🇭", "Cambodge"], ["🇨🇲", "Cameroun"], ["🇨🇦", "Canada"],
+  ["🇨🇫", "Centrafrique"], ["🇨🇱", "Chili"], ["🇨🇳", "Chine"], ["🇨🇾", "Chypre"],
+  ["🇨🇴", "Colombie"], ["🇰🇲", "Comores"], ["🇨🇬", "Congo"], ["🇨🇩", "Congo (RDC)"],
+  ["🇨🇷", "Costa Rica"], ["🇨🇮", "Côte d’Ivoire"], ["🇭🇷", "Croatie"], ["🇨🇺", "Cuba"],
+  ["🇩🇰", "Danemark"], ["🇩🇯", "Djibouti"], ["🇩🇲", "Dominique"],
+  ["🇨🇿", "Tchéquie"], ["🇦🇪", "Émirats arabes unis"], ["🇪🇨", "Équateur"], ["🇪🇬", "Égypte"],
+  ["🇪🇷", "Érythrée"], ["🇪🇸", "Espagne"],
+  ["🇪🇪", "Estonie"], ["🇸🇿", "Eswatini"], ["🇺🇸", "États-Unis"], ["🇪🇹", "Éthiopie"],
+  ["🇫🇯", "Fidji"], ["🇫🇮", "Finlande"], ["🇫🇷", "France"], ["🇬🇦", "Gabon"],
+  ["🇬🇲", "Gambie"], ["🇬🇪", "Géorgie"], ["🇬🇭", "Ghana"], ["🇬🇷", "Grèce"],
+  ["🇬🇩", "Grenade"], ["🇬🇹", "Guatemala"], ["🇬🇳", "Guinée"], ["🇬🇼", "Guinée-Bissau"],
+  ["🇬🇶", "Guinée équatoriale"], ["🇬🇾", "Guyana"], ["🇭🇹", "Haïti"], ["🇭🇳", "Honduras"],
+  ["🇭🇺", "Hongrie"], ["🇮🇳", "Inde"], ["🇮🇩", "Indonésie"], ["🇮🇶", "Irak"],
+  ["🇮🇷", "Iran"], ["🇮🇪", "Irlande"], ["🇮🇸", "Islande"], ["🇮🇱", "Israël"],
+  ["🇮🇹", "Italie"], ["🇯🇲", "Jamaïque"], ["🇯🇵", "Japon"], ["🇯🇴", "Jordanie"],
+  ["🇰🇿", "Kazakhstan"], ["🇰🇪", "Kenya"], ["🇰🇮", "Kiribati"], ["🇰🇼", "Koweït"],
+  ["🇰🇬", "Kirghizistan"], ["🇱🇦", "Laos"], ["🇱🇸", "Lesotho"], ["🇱🇻", "Lettonie"],
+  ["🇱🇧", "Liban"], ["🇱🇷", "Liberia"], ["🇱🇾", "Libye"], ["🇱🇮", "Liechtenstein"],
+  ["🇱🇹", "Lituanie"], ["🇱🇺", "Luxembourg"], ["🇲🇰", "Macédoine du Nord"], ["🇲🇬", "Madagascar"],
+  ["🇲🇼", "Malawi"], ["🇲🇾", "Malaisie"], ["🇲🇻", "Maldives"], ["🇲🇱", "Mali"],
+  ["🇲🇹", "Malte"], ["🇲🇦", "Maroc"], ["🇲🇭", "Îles Marshall"], ["🇲🇷", "Mauritanie"],
+  ["🇲🇺", "Maurice"], ["🇲🇽", "Mexique"], ["🇫🇲", "Micronésie"], ["🇲🇩", "Moldavie"],
+  ["🇲🇨", "Monaco"], ["🇲🇳", "Mongolie"], ["🇲🇪", "Monténégro"], ["🇲🇿", "Mozambique"],
+  ["🇳🇦", "Namibie"], ["🇳🇷", "Nauru"], ["🇳🇵", "Népal"], ["🇳🇮", "Nicaragua"],
+  ["🇳🇪", "Niger"], ["🇳🇬", "Nigeria"], ["🇰🇵", "Corée du Nord"], ["🇰🇷", "Corée du Sud"], ["🇳🇴", "Norvège"],
+  ["🇳🇿", "Nouvelle-Zélande"], ["🇴🇲", "Oman"], ["🇺🇬", "Ouganda"], ["🇺🇿", "Ouzbékistan"],
+  ["🇵🇰", "Pakistan"], ["🇵🇼", "Palaos"], ["🇵🇸", "Palestine"], ["🇵🇦", "Panama"],
+  ["🇵🇬", "Papouasie-Nouvelle-Guinée"], ["🇵🇾", "Paraguay"], ["🇳🇱", "Pays-Bas"], ["🇵🇪", "Pérou"],
+  ["🇵🇭", "Philippines"], ["🇵🇱", "Pologne"], ["🇵🇹", "Portugal"], ["🇶🇦", "Qatar"],
+  ["🇩🇴", "République dominicaine"], ["🇷🇴", "Roumanie"], ["🇬🇧", "Royaume-Uni"], ["🇷🇺", "Russie"],
+  ["🇷🇼", "Rwanda"], ["🇰🇳", "Saint-Christophe-et-Niévès"], ["🇸🇲", "Saint-Marin"], ["🇻🇨", "Saint-Vincent-et-les-Grenadines"],
+  ["🇱🇨", "Sainte-Lucie"], ["🇸🇧", "Salomon"], ["🇸🇻", "Salvador"], ["🇼🇸", "Samoa"],
+  ["🇸🇹", "Sao Tomé-et-Principe"], ["🇸🇳", "Sénégal"], ["🇷🇸", "Serbie"], ["🇸🇨", "Seychelles"],
+  ["🇸🇱", "Sierra Leone"], ["🇸🇬", "Singapour"], ["🇸🇰", "Slovaquie"], ["🇸🇮", "Slovénie"],
+  ["🇸🇴", "Somalie"], ["🇸🇩", "Soudan"], ["🇸🇸", "Soudan du Sud"], ["🇱🇰", "Sri Lanka"],
+  ["🇸🇪", "Suède"], ["🇨🇭", "Suisse"], ["🇸🇷", "Suriname"], ["🇸🇾", "Syrie"],
+  ["🇹🇯", "Tadjikistan"], ["🇹🇿", "Tanzanie"], ["🇹🇩", "Tchad"], ["🇹🇭", "Thaïlande"],
+  ["🇹🇱", "Timor oriental"], ["🇹🇬", "Togo"], ["🇹🇴", "Tonga"], ["🇹🇹", "Trinité-et-Tobago"],
+  ["🇹🇳", "Tunisie"], ["🇹🇷", "Turquie"], ["🇹🇲", "Turkménistan"], ["🇹🇻", "Tuvalu"],
+  ["🇺🇦", "Ukraine"], ["🇺🇾", "Uruguay"], ["🇻🇺", "Vanuatu"], ["🇻🇦", "Vatican"],
+  ["🇻🇪", "Venezuela"], ["🇻🇳", "Viêt Nam"], ["🇾🇪", "Yémen"], ["🇿🇲", "Zambie"],
+  ["🇿🇼", "Zimbabwe"]
+];
+const STORAGE_KEY = "drapeaux-sans-hesiter-v1";
+const $ = (id) => document.getElementById(id);
+let memory = loadMemory(), current, options = [], answered = false, streak = 0;
+
+function loadMemory() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
+}
+function getRecord(name) { return memory[name] || { right: 0, wrong: 0, streak: 0, seen: 0 }; }
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(memory)); }
+function isMastered(record) { return record.streak >= 4 && record.seen >= 4 && record.right / record.seen >= .8; }
+function weight(flag) {
+  const record = getRecord(flag[1]);
+  return 1 + record.wrong * 4 + (record.seen && !isMastered(record) ? 3 : 0);
+}
+function pickWeighted(pool) {
+  let cursor = Math.random() * pool.reduce((sum, flag) => sum + weight(flag), 0);
+  return pool.find((flag) => (cursor -= weight(flag)) <= 0) || pool[pool.length - 1];
+}
+function chooseFlag() {
+  const notMastered = FLAGS.filter((flag) => !isMastered(getRecord(flag[1])));
+  // Même en fin de parcours, on continue à cibler les drapeaux non maîtrisés.
+  // On ne repasse sur tout le catalogue que lorsque la liste est entièrement maîtrisée.
+  const pool = notMastered.length ? notMastered : FLAGS;
+  let next = pickWeighted(pool), attempts = 0;
+  while (current && next[1] === current[1] && attempts++ < 10) next = pickWeighted(pool);
+  return next;
+}
+function chooseOptions(correct) {
+  const others = FLAGS.filter((flag) => flag[1] !== correct[1]), distractors = [];
+  while (distractors.length < 3) {
+    const candidate = others[Math.floor(Math.random() * others.length)];
+    if (!distractors.some((flag) => flag[1] === candidate[1])) distractors.push(candidate);
+  }
+  return [correct, ...distractors].sort(() => Math.random() - .5);
+}
+function renderQuestion() {
+  current = chooseFlag(); options = chooseOptions(current); answered = false;
+  $("question-number").textContent = String((Number($("question-number").textContent) % 99) + 1).padStart(2, "0");
+  $("flag").textContent = current[0];
+  $("options").innerHTML = options.map((flag, index) => `<button class="option" data-index="${index}" type="button"><span class="option-key">${index + 1}</span>${flag[1]}</button>`).join("");
+  $("feedback").textContent = ""; $("feedback").className = "feedback";
+  const record = getRecord(current[1]);
+  $("focus-message").textContent = record.wrong > record.right ? "Ce drapeau revient parce qu’il mérite votre attention." : "Le jeu choisit votre prochain drapeau selon vos résultats.";
+  document.querySelectorAll(".option").forEach((button) => button.addEventListener("click", () => answer(Number(button.dataset.index))));
+}
+function answer(index) {
+  if (answered) return;
+  answered = true;
+  const selected = options[index], record = getRecord(current[1]);
+  record.seen++;
+  if (selected[1] === current[1]) {
+    record.right++; record.streak++; streak++;
+    $("feedback").textContent = isMastered(record) ? "Excellent : ce drapeau sort de votre liste prioritaire." : "Bonne réponse. La mémoire se renforce.";
+    $("feedback").className = "feedback good"; $("options").children[index].classList.add("correct");
+  } else {
+    record.wrong++; record.streak = 0; streak = 0;
+    $("feedback").textContent = `Pas encore — c’était ${current[1]}. Il reviendra bientôt.`;
+    $("feedback").className = "feedback bad"; $("options").children[index].classList.add("wrong");
+    options.forEach((flag, optionIndex) => { if (flag[1] === current[1]) $("options").children[optionIndex].classList.add("correct"); });
+  }
+  memory[current[1]] = record; save(); updateStats(); $("streak").innerHTML = `Série <strong>${streak}</strong> <span>◆</span>`;
+  setTimeout(renderQuestion, 1100);
+}
+function updateStats() {
+  const records = FLAGS.map((flag) => getRecord(flag[1])), mastered = records.filter(isMastered).length;
+  const seen = records.reduce((sum, record) => sum + record.seen, 0), right = records.reduce((sum, record) => sum + record.right, 0);
+  $("mastered-count").textContent = mastered; $("review-count").textContent = FLAGS.length - mastered;
+  $("accuracy").textContent = seen ? `${Math.round(right / seen * 100)}%` : "—";
+  $("mastery-percent").textContent = `${Math.round(mastered / FLAGS.length * 100)}%`; $("mastery-bar").style.width = `${mastered / FLAGS.length * 100}%`;
+  $("pool-message").textContent = `${FLAGS.length} drapeaux · ${FLAGS.length - mastered} dans votre entraînement prioritaire`;
+}
+function resetMemory() {
+  if (!confirm("Effacer toute votre progression et recommencer ?")) return;
+  memory = {}; streak = 0; $("question-number").textContent = "00"; save(); updateStats(); renderQuestion();
+}
+document.addEventListener("keydown", (event) => { if (!answered && ["1", "2", "3", "4"].includes(event.key)) answer(Number(event.key) - 1); });
+$("reset-button").addEventListener("click", resetMemory);
+updateStats(); renderQuestion();
   {
     category: "Logique", title: "Les trois coffres", difficulty: "◆ ◆ ◇", type: "text",
     text: "Un seul coffre contient la clé. Un seul des trois messages est vrai. Coffre A : « La clé est dans B. » Coffre B : « La clé n’est pas ici. » Coffre C : « La clé n’est pas dans A. » Dans quel coffre se trouve la clé ?",

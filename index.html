@@ -4,79 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#101827" />
-    <title>Le Cabinet des énigmes</title>
+    <title>Drapeaux — entraînement adaptatif</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="app-shell">
       <header class="topbar">
-        <a class="brand" href="#" aria-label="Accueil">
-          <span class="brand-mark">✦</span>
-          <span>Le Cabinet <em>des énigmes</em></span>
-        </a>
-        <div class="top-stats" aria-label="Statistiques de la partie">
-          <span><strong id="score">0</strong><small>points</small></span>
-          <span class="stat-divider"></span>
-          <span><strong id="timer">00:00</strong><small>temps</small></span>
-        </div>
+        <a class="brand" href="#" aria-label="Accueil"><span class="brand-mark">⚑</span><span>Drapeaux <em>sans hésiter</em></span></a>
+        <button class="reset-button" id="reset-button" type="button">Réinitialiser ma mémoire</button>
       </header>
-
       <section class="hero">
-        <div>
-          <p class="eyebrow">Dossier confidentiel · 04 énigmes</p>
-          <h1>Votre esprit est<br /><span>la seule clé.</span></h1>
-          <p class="intro">
-            Quatre énigmes vous séparent du secret du Cabinet. Observez, déduisez,
-            puis répondez sans précipitation.
-          </p>
-        </div>
-        <div class="seal" aria-hidden="true">
-          <span>LE</span>
-          <strong>CI</strong>
-          <span>AB</span>
-          <small>depuis 1897</small>
-        </div>
+        <div><p class="eyebrow">Entraînement personnalisé</p><h1>Reconnaissez<br /><span>chaque drapeau.</span></h1><p class="intro">Répondez aux questions. Le jeu repère vos hésitations et vous représente les drapeaux difficiles jusqu’à ce qu’ils deviennent évidents.</p></div>
+        <div class="flag-stack" aria-hidden="true"><span>🇯🇵</span><span>🇧🇷</span><span>🇿🇦</span></div>
       </section>
-
-      <div class="progress-wrap">
-        <div class="progress-label"><span id="progress-label">Énigme 1 sur 4</span><span id="progress-percent">25%</span></div>
-        <div class="progress-track"><div class="progress-bar" id="progress-bar"></div></div>
-      </div>
-
-      <section class="game-card" id="game-card" aria-live="polite">
-        <div class="card-heading">
-          <span class="puzzle-number" id="puzzle-number">01</span>
-          <div>
-            <p class="eyebrow" id="puzzle-category">Logique</p>
-            <h2 id="puzzle-title">Les trois coffres</h2>
-          </div>
-          <span class="difficulty" id="difficulty">◆ ◆ ◇</span>
-        </div>
-        <div class="puzzle-content">
-          <p class="puzzle-text" id="puzzle-text"></p>
-          <div id="puzzle-art" class="puzzle-art" aria-hidden="true"></div>
-          <div class="answer-area" id="answer-area"></div>
-          <p class="feedback" id="feedback" role="status"></p>
-        </div>
-        <div class="card-footer">
-          <button class="hint-button" id="hint-button" type="button">✧ Révéler un indice <span id="hint-cost">−10 pts</span></button>
-          <button class="primary-button" id="validate-button" type="button">Valider la réponse <span>→</span></button>
-        </div>
+      <section class="dashboard" aria-label="Votre progression">
+        <div class="stat"><strong id="mastered-count">0</strong><span>maîtrisés</span></div>
+        <div class="stat"><strong id="review-count">0</strong><span>à revoir</span></div>
+        <div class="stat"><strong id="accuracy">—</strong><span>réussite</span></div>
+        <div class="stat stat-wide"><div class="mastery-line"><span>Progression globale</span><b id="mastery-percent">0%</b></div><div class="meter"><i id="mastery-bar"></i></div></div>
       </section>
-
-      <section class="completion hidden" id="completion">
-        <div class="completion-icon">✦</div>
-        <p class="eyebrow">Dossier classé</p>
-        <h2>Le secret est à vous.</h2>
-        <p id="final-message"></p>
-        <div class="final-stats">
-          <span><strong id="final-score">0</strong><small>score final</small></span>
-          <span><strong id="final-time">00:00</strong><small>temps total</small></span>
-        </div>
-        <button class="primary-button" id="restart-button" type="button">Rejouer le dossier <span>↻</span></button>
+      <section class="trainer" id="trainer" aria-live="polite">
+        <div class="trainer-heading"><div><p class="eyebrow">Question <span id="question-number">01</span></p><h2>Quel pays porte ce drapeau&nbsp;?</h2></div><div class="streak" id="streak">Série <strong>0</strong> <span>◆</span></div></div>
+        <div class="flag-card"><span id="flag" aria-label="Drapeau à identifier">🇫🇷</span></div>
+        <div class="options" id="options"></div>
+        <p class="feedback" id="feedback" role="status"></p>
+        <div class="trainer-footer"><span id="focus-message">Le jeu choisit votre prochain drapeau selon vos résultats.</span><span class="kbd">1–4 pour répondre</span></div>
       </section>
-
-      <footer><span>Un jeu de logique pour les esprits curieux.</span><button id="reset-button" type="button">Réinitialiser la partie</button></footer>
+      <section class="tip"><span class="tip-icon">✦</span><div><strong>Comment fonctionne la mémoire adaptative&nbsp;?</strong><p>Une erreur augmente la fréquence d’un drapeau. Quatre bonnes réponses consécutives le retirent de la sélection prioritaire : vous ne perdez pas de temps sur ce que vous savez déjà.</p></div></section>
+      <footer><span id="pool-message">195 drapeaux disponibles</span><span>Votre progression est sauvegardée dans ce navigateur.</span></footer>
     </main>
     <script src="script.js"></script>
   </body>
