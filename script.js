@@ -86,7 +86,7 @@ function renderQuestion() {
   $("flag").innerHTML = `<img src="https://flagcdn.com/w320/${flagCode(current[0])}.png" alt="Drapeau à identifier" />`;
   $("country-input").value = "";
   $("country-input").disabled = false;
-  $("answer-form").querySelector("button").disabled = false;
+  $("answer-button").disabled = false;
   $("feedback").textContent = ""; $("feedback").className = "feedback";
   const record = getRecord(current[1]);
   $("focus-message").textContent = record.wrong > record.right ? "Ce drapeau revient parce qu’il mérite votre attention." : "Le jeu choisit votre prochain drapeau selon vos résultats.";
@@ -112,7 +112,7 @@ function answer() {
     $("feedback").textContent = `Pas encore — c’était ${current[1]}. Il reviendra bientôt.`;
     $("feedback").className = "feedback bad";
   }
-  $("country-input").disabled = true; $("answer-form").querySelector("button").disabled = true;
+  $("country-input").disabled = true; $("answer-button").disabled = true;
   memory[current[1]] = record; save(); updateStats(); $("streak").innerHTML = `Série <strong>${streak}</strong> <span>◆</span>`;
   setTimeout(renderQuestion, 1100);
 }
@@ -131,8 +131,13 @@ function resetMemory() {
   if (!confirm("Effacer toute votre progression et recommencer ?")) return;
   memory = {}; streak = 0; $("question-number").textContent = "00"; save(); updateStats(); renderQuestion();
 }
-document.addEventListener("keydown", (event) => { if (!answered && event.key === "Enter" && document.activeElement !== $("country-input")) answer(); });
-$("answer-form").addEventListener("submit", (event) => { event.preventDefault(); answer(); });
+document.addEventListener("keydown", (event) => {
+  if (!answered && event.key === "Enter" && document.activeElement === $("country-input")) {
+    event.preventDefault();
+    answer();
+  }
+});
+$("answer-button").addEventListener("click", answer);
 $("reset-button").addEventListener("click", resetMemory);
 updateStats(); renderQuestion();
   {
