@@ -103,6 +103,7 @@ function answer() {
   answered = true;
   const record = getRecord(current[1]);
   record.seen++;
+  let nextQuestionDelay = 1000;
   if (normalize(value) === normalize(current[1])) {
     record.right++; record.streak++; streak++;
     $("feedback").textContent = isMastered(record) ? "Excellent : ce drapeau sort de votre liste prioritaire." : "Bonne réponse. La mémoire se renforce.";
@@ -111,10 +112,11 @@ function answer() {
     record.wrong++; record.streak = 0; streak = 0;
     $("feedback").textContent = `Pas encore — c’était ${current[1]}. Il reviendra bientôt.`;
     $("feedback").className = "feedback bad";
+    nextQuestionDelay = 4000;
   }
   $("country-input").disabled = true; $("answer-button").disabled = true;
   memory[current[1]] = record; save(); updateStats(); $("streak").innerHTML = `Série <strong>${streak}</strong> <span>◆</span>`;
-  setTimeout(renderQuestion, 1100);
+  setTimeout(renderQuestion, nextQuestionDelay);
 }
 function normalize(value) {
   return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "'").trim();
