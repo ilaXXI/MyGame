@@ -52,7 +52,7 @@ const FLAGS = [
 ];
 const STORAGE_KEY = "drapeaux-sans-hesiter-v1";
 const $ = (id) => document.getElementById(id);
-let memory = loadMemory(), current, options = [], answered = false, streak = 0;
+let memory = loadMemory(), current, answered = false, streak = 0;
 
 function loadMemory() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; }
@@ -77,44 +77,47 @@ function chooseFlag() {
   while (current && next[1] === current[1] && attempts++ < 10) next = pickWeighted(pool);
   return next;
 }
-function chooseOptions(correct) {
-  const others = FLAGS.filter((flag) => flag[1] !== correct[1]), distractors = [];
-  while (distractors.length < 3) {
-    const candidate = others[Math.floor(Math.random() * others.length)];
-    if (!distractors.some((flag) => flag[1] === candidate[1])) distractors.push(candidate);
-  }
-  return [correct, ...distractors].sort(() => Math.random() - .5);
-}
 function flagCode(flagEmoji) {
   return [...flagEmoji].map((character) => String.fromCharCode(character.codePointAt(0) - 127397)).join("").toLowerCase();
 }
 function renderQuestion() {
-  current = chooseFlag(); options = chooseOptions(current); answered = false;
+  current = chooseFlag(); answered = false;
   $("question-number").textContent = String((Number($("question-number").textContent) % 99) + 1).padStart(2, "0");
   $("flag").innerHTML = `<img src="https://flagcdn.com/w320/${flagCode(current[0])}.png" alt="Drapeau à identifier" />`;
-  $("options").innerHTML = options.map((flag, index) => `<button class="option" data-index="${index}" type="button"><span class="option-key">${index + 1}</span>${flag[1]}</button>`).join("");
+  $("country-input").value = "";
+  $("country-input").disabled = false;
+  $("answer-form").querySelector("button").disabled = false;
   $("feedback").textContent = ""; $("feedback").className = "feedback";
   const record = getRecord(current[1]);
   $("focus-message").textContent = record.wrong > record.right ? "Ce drapeau revient parce qu’il mérite votre attention." : "Le jeu choisit votre prochain drapeau selon vos résultats.";
-  document.querySelectorAll(".option").forEach((button) => button.addEventListener("click", () => answer(Number(button.dataset.index))));
+  $("country-input").focus();
 }
-function answer(index) {
+function answer() {
   if (answered) return;
+  const value = $("country-input").value.trim();
+  if (!value) {
+    $("feedback").textContent = "Écrivez le nom d’un pays avant de valider.";
+    $("feedback").className = "feedback bad";
+    return;
+  }
   answered = true;
-  const selected = options[index], record = getRecord(current[1]);
+  const record = getRecord(current[1]);
   record.seen++;
-  if (selected[1] === current[1]) {
+  if (normalize(value) === normalize(current[1])) {
     record.right++; record.streak++; streak++;
     $("feedback").textContent = isMastered(record) ? "Excellent : ce drapeau sort de votre liste prioritaire." : "Bonne réponse. La mémoire se renforce.";
-    $("feedback").className = "feedback good"; $("options").children[index].classList.add("correct");
+    $("feedback").className = "feedback good";
   } else {
     record.wrong++; record.streak = 0; streak = 0;
     $("feedback").textContent = `Pas encore — c’était ${current[1]}. Il reviendra bientôt.`;
-    $("feedback").className = "feedback bad"; $("options").children[index].classList.add("wrong");
-    options.forEach((flag, optionIndex) => { if (flag[1] === current[1]) $("options").children[optionIndex].classList.add("correct"); });
+    $("feedback").className = "feedback bad";
   }
+  $("country-input").disabled = true; $("answer-form").querySelector("button").disabled = true;
   memory[current[1]] = record; save(); updateStats(); $("streak").innerHTML = `Série <strong>${streak}</strong> <span>◆</span>`;
   setTimeout(renderQuestion, 1100);
+}
+function normalize(value) {
+  return value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’']/g, "'").trim();
 }
 function updateStats() {
   const records = FLAGS.map((flag) => getRecord(flag[1])), mastered = records.filter(isMastered).length;
@@ -128,7 +131,8 @@ function resetMemory() {
   if (!confirm("Effacer toute votre progression et recommencer ?")) return;
   memory = {}; streak = 0; $("question-number").textContent = "00"; save(); updateStats(); renderQuestion();
 }
-document.addEventListener("keydown", (event) => { if (!answered && ["1", "2", "3", "4"].includes(event.key)) answer(Number(event.key) - 1); });
+document.addEventListener("keydown", (event) => { if (!answered && event.key === "Enter" && document.activeElement !== $("country-input")) answer(); });
+$("answer-form").addEventListener("submit", (event) => { event.preventDefault(); answer(); });
 $("reset-button").addEventListener("click", resetMemory);
 updateStats(); renderQuestion();
   {

@@ -26,9 +26,15 @@
       <section class="trainer" id="trainer" aria-live="polite">
         <div class="trainer-heading"><div><p class="eyebrow">Question <span id="question-number">01</span></p><h2>Quel pays porte ce drapeau&nbsp;?</h2></div><div class="streak" id="streak">Série <strong>0</strong> <span>◆</span></div></div>
         <div class="flag-card"><span id="flag" aria-label="Drapeau à identifier"><img src="https://flagcdn.com/w320/fr.png" alt="Drapeau à identifier" /></span></div>
-        <div class="options" id="options"></div>
+        <form class="answer-form" id="answer-form">
+          <label for="country-input">Votre réponse</label>
+          <div class="answer-row">
+            <input id="country-input" type="text" autocomplete="off" placeholder="Écrivez le nom du pays…" />
+            <button type="submit">Vérifier <span>↵</span></button>
+          </div>
+        </form>
         <p class="feedback" id="feedback" role="status"></p>
-        <div class="trainer-footer"><span id="focus-message">Le jeu choisit votre prochain drapeau selon vos résultats.</span><span class="kbd">1–4 pour répondre</span></div>
+        <div class="trainer-footer"><span id="focus-message">Le jeu choisit votre prochain drapeau selon vos résultats.</span><span class="kbd">Entrée pour valider</span></div>
       </section>
       <section class="tip"><span class="tip-icon">✦</span><div><strong>Comment fonctionne la mémoire adaptative&nbsp;?</strong><p>Une erreur augmente la fréquence d’un drapeau. Quatre bonnes réponses consécutives le retirent de la sélection prioritaire : vous ne perdez pas de temps sur ce que vous savez déjà.</p></div></section>
       <footer><span id="pool-message">195 drapeaux disponibles</span><span>Votre progression est sauvegardée dans ce navigateur.</span></footer>
