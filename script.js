@@ -85,10 +85,13 @@ function chooseOptions(correct) {
   }
   return [correct, ...distractors].sort(() => Math.random() - .5);
 }
+function flagCode(flagEmoji) {
+  return [...flagEmoji].map((character) => String.fromCharCode(character.codePointAt(0) - 127397)).join("").toLowerCase();
+}
 function renderQuestion() {
   current = chooseFlag(); options = chooseOptions(current); answered = false;
   $("question-number").textContent = String((Number($("question-number").textContent) % 99) + 1).padStart(2, "0");
-  $("flag").textContent = current[0];
+  $("flag").innerHTML = `<img src="https://flagcdn.com/w320/${flagCode(current[0])}.png" alt="Drapeau à identifier" />`;
   $("options").innerHTML = options.map((flag, index) => `<button class="option" data-index="${index}" type="button"><span class="option-key">${index + 1}</span>${flag[1]}</button>`).join("");
   $("feedback").textContent = ""; $("feedback").className = "feedback";
   const record = getRecord(current[1]);
